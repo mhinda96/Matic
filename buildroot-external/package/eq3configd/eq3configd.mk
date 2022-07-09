@@ -9,7 +9,7 @@ EQ3CONFIGD_SOURCE =
 EQ3CONFIGD_LICENSE = Apache-2.0
 
 define EQ3CONFIGD_USERS
-  eq3configd -1 eq3configd -1 * - - - eQ3 config daemon
+	eq3configd -1 eq3configd -1 * - - - eQ3 config daemon
 endef
 
 define EQ3CONFIGD_INSTALL_INIT_SYSV
