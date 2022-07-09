@@ -1,6 +1,4 @@
-menu "Hardware Support"
-  source "$BR2_EXTERNAL_RECOVERY_SYSTEM_PATH/../../../package/rx8130-rtc/Config.in"
-endmenu
+source "$BR2_EXTERNAL_RECOVERY_SYSTEM_PATH/../../../package/multilib32/Config.in"
 
 menu "Kernel Module Support"
   source "$BR2_EXTERNAL_RECOVERY_SYSTEM_PATH/../../../package/generic_raw_uart/Config.in"
@@ -8,6 +6,7 @@ endmenu
 
 menu "Software Support"
   source "$BR2_EXTERNAL_RECOVERY_SYSTEM_PATH/package/hm-platform/Config.in"
+  source "$BR2_EXTERNAL_RECOVERY_SYSTEM_PATH/../../../package/detect_radio_module/Config.in"
   source "$BR2_EXTERNAL_RECOVERY_SYSTEM_PATH/../../../package/wiringpi-rpi/Config.in"
   source "$BR2_EXTERNAL_RECOVERY_SYSTEM_PATH/../../../package/wiringpi-tinker/Config.in"
   source "$BR2_EXTERNAL_RECOVERY_SYSTEM_PATH/../../../package/rndaddtoentcnt/Config.in"

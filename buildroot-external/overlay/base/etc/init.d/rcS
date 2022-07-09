@@ -1,7 +1,24 @@
 #!/bin/sh
+# shellcheck shell=dash disable=SC2169 source=/dev/null
 #
 # Start all init scripts in /etc/init.d
 # executing them in numerical order.
+
+# perform systemwide fsck
+/sbin/fsck -A -R -p
+
+# mount all filesystems
+/bin/mount -a
+
+# create /var/run and /var/cache
+/bin/mkdir -p /var/run /var/cache
+
+# create ld.so.cache file
+/sbin/ldconfig -C /var/cache/ld.so.cache
+
+# start psplash
+/usr/bin/psplash -n 2>/dev/null &
+PSPLASH_PID=$!
 
 for i in /etc/init.d/S??* ;do
 
@@ -21,7 +38,7 @@ for i in /etc/init.d/S??* ;do
       (
         trap - INT QUIT TSTP
         set start
-        . ${i}
+        . "${i}"
       )
       ;;
     *)
@@ -37,16 +54,25 @@ IP=$(ip -4 route get 1 | head -1 | cut -d' ' -f8 | tr -d '\n')
 [[ -r /VERSION ]] && . /VERSION
 [[ -r /var/hm_mode ]] && . /var/hm_mode
 
+echo "Finished Boot: ${VERSION} (${PRODUCT})"
+
+MSG="${VERSION} --"
 if [[ "${HM_MODE}" == "NORMAL" ]]; then
   if [[ -z "${IP}" ]]; then
-    /usr/bin/psplash-write "MSG ${VERSION} -- ERROR: No IP address set"
+    MSG="${MSG} ERROR: No IP address set"
   else
-    /usr/bin/psplash-write "MSG ${VERSION} -- http://${IP}/"
+    MSG="${MSG} http://${IP}/"
   fi
 else
   if [[ -z "${IP}" ]]; then
-    /usr/bin/psplash-write "MSG ${VERSION} -- LAN-Gateway Mode (ERROR: No IP address set)"
+    MSG="${MSG} LAN-Gateway Mode (ERROR: No IP address set)"
   else
-    /usr/bin/psplash-write "MSG ${VERSION} -- LAN-Gateway Mode (IP: ${IP}, Serial: ${HM_HMRF_SERIAL})"
+    MSG="${MSG} LAN-Gateway Mode (IP: ${IP}, Serial: ${HM_HMRF_SERIAL})"
   fi
 fi
+MSG=$(echo -en "${MSG}\n\n-- Press ALT+F2 for service console")
+
+/usr/bin/psplash-write "MSG ${MSG}"
+
+# kill psplash after 2 seconds
+(sleep 2; kill ${PSPLASH_PID}) &

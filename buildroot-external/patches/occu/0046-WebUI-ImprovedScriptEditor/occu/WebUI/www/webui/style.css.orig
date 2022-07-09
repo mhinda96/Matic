@@ -1,3 +1,7 @@
+:root {
+  --btnGradient: linear-gradient(to bottom, #ffffff, #a1a1a1);
+}
+
 * {
 	font-family:Verdana,Tahoma,Arial,Helvetica,sans-serif ! important;
 	font-size: 12px ! important;
@@ -41,6 +45,10 @@
 	width:160px;
 }
 
+.minWidth210px {
+  min-width: 210px;
+}
+
 .minWidth230px {
   min-width: 230px;
 }
@@ -62,11 +70,15 @@
 }
 
 .colorGradient {
-  background-image:url(/ise/img/gradientButton25px.png) !important;
+  /*background-image:url(/ise/img/gradientButton25px.png) !important;*/
+  /*background-image: linear-gradient(to bottom, white 40%, gray) !important;*/
+  background-image: var(--btnGradient) !important;
 }
 
 .colorGradient50px {
-  background-image:url(/ise/img/gradientButton50px.png) !important;
+  /*background-image:url(/ise/img/gradientButton50px.png) !important;*/
+  /*(to bottom, white 40%, gray) !important;*/
+  background-image: var(--btnGradient) !important;
 }
 
 .startPageInfo {
@@ -149,6 +161,18 @@ a img {
 {
     background-color: $_(contentBackground);
     overflow: auto;
+    display: flex;
+    align-items: flex-start;
+}
+
+#prgcontent
+{
+  display: contents;
+}
+
+#GroupListBody
+{
+  display: contents;
 }
 
 /* Kopfzeile */
@@ -200,7 +224,8 @@ a img {
 
 /* Pfadangabe im Seiten-Header */
 #PagePath {
-  color: $_(textColorA); /* #ffffff */
+  /*color: $_(textColorA);  #ffffff */
+  color: #afafaf; /* #ffffff */
   vertical-align: bottom;
 }
 #PagePath span {
@@ -258,11 +283,11 @@ a img {
 }
 
 #chnListBody td {
-  /*border: solid 1px $_(black); /* black */*/
+  /*border: solid 1px $_(black); /* black */
   text-align: center;  
 }
 #chnListBody th {
-  /*border: solid 1px $_(black); /* black */*/
+  /*border: solid 1px $_(black); /* black */
   text-align: center;  
 }
 
@@ -315,7 +340,9 @@ a img {
 /* Standard-Button (z.B. Benutzernamen bei Login) */
 .Button {
   background-color: $_(clickable);
-  background-image:url(/ise/img/gradientButton50px.png) !important;
+  /*background-image:url(/ise/img/gradientButton50px.png) !important;*/
+  /*background-image: linear-gradient(to bottom, white 40%, gray) !important;*/
+  background-image: var(--btnGradient) !important;
   color: $_(textColorB); /* black */
   font-weight: bold;
   width: 200px;
@@ -376,7 +403,7 @@ a img {
   text-align:center;
   border:solid 1px $_(black); /* black */
   background-color:$_(clickable);
-  height: 20px;
+  height:50px;
 }
 
 .filterTable td
@@ -408,6 +435,8 @@ a img {
 {
   background-color: $_(logoutButton);
   background-image:url(/ise/img/gradientButton25px.png);
+  /*background-image: linear-gradient(to bottom, white 40%, gray);*/
+  background-image: var(--btnGradient);
 
   color: $_(textColorB); /* black */
   font-weight: bold;
@@ -470,6 +499,8 @@ a img {
 .Messages {
   background-color: $_(messagesBackground);
   background-image:url(/ise/img/gradientButton25px.png);
+  /*background-image: linear-gradient(to bottom, white 40%, gray);*/
+  background-image: var(--btnGradient);
 
   overflow: auto;
 
@@ -482,7 +513,7 @@ a img {
 
 .Messages_Selected {
   background-color: $_(active); /* #565657 */
-};
+}
 
 /* Kopfzeile der Alarm-/Servicemeldungen */
 .MsgTblHeader {
@@ -527,7 +558,9 @@ a img {
   overflow: hidden;
   border-radius: 10px;
   margin-left: 10px;
-  background-image:url(/ise/img/gradientButton50px.png);
+  /*background-image:url(/ise/img/gradientButton50px.png);*/
+  background-image: linear-gradient(to bottom, white 40%, gray);
+  background-image: var(--btnGradient);
 }
 
 .StdTableBtnHelp {
@@ -573,9 +606,10 @@ a img {
 
 /* Tabelle zur Listendarstellung von Elementen (z.B. Raumübersicht) */
 .tblList {
-  margin-top: 20px;
-  width: 100%;
+  margin: 10px;
   empty-cells: show;
+  border: solid 1px $_(black); /* black */
+  width: 100%;
 }
 
 .tblList th {
@@ -587,23 +621,25 @@ a img {
 .Sort
 {
   cursor: pointer;
-  text-align: center;
-  vertical-align: middle;
-  height: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .SortSelected
 {
   cursor: pointer;
   background-color: $_(active); /* #565657 */
-  text-align: center;
-  vertical-align: middle;
-  height: 100%;
+  height: 54px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .pt11
 {
-  padding-top: 11px;
+  
 }
 
 .tblList td {
@@ -616,7 +652,6 @@ a img {
 /* Kopfzeile eines Popup-Fenster */
 .popupTitle {
   color: $_(textColorB); /* black */
-  width: 99.4%;
   background-color: $_(white); /* white */
   border: solid 1px $_(black); /* black */
   padding-left: 4px;
@@ -685,13 +720,14 @@ a img {
 
 .popupControls {
   background-color: $_(white); /* white */
-  width: 100%;
   border: solid 1px $_(black); /* black */
 }
 
 .popupControls div {
   background-color: $_(clickable);
   background-image:url(/ise/img/gradientButton25px.png);
+  /*background-image: linear-gradient(to bottom, white 40%, gray);*/
+  background-image: var(--btnGradient);
 
   color: $_(textColorB); /* black */
   text-align: center;
@@ -712,8 +748,8 @@ a img {
 
 /* KanalListe */
 .ChnListTbl {
-  width: 100%;
   background-color: $_(black); /* black */
+  margin: 10px;
 }
 
 .ChnListTbl td {
@@ -738,7 +774,8 @@ a img {
 
 .FilterBtn {
   background-image:url(/ise/img/gradientButton25px.png);
-
+  /*background-image: linear-gradient(to bottom, white 40%, gray);*/
+  background-image: var(--btnGradient);
   color: $_(textColorB); /* black */
 
   cursor: pointer;
@@ -773,6 +810,8 @@ a img {
 .FilterSetButton {
   background-color: $_(clickable);
   background-image:url(/ise/img/gradientButton25px.png);
+  /*background-image: linear-gradient(to bottom, white 40%, gray);*/
+  background-image: var(--btnGradient);
 
   color: $_(textColorB); /* black */
   border: solid 1px $_(black); /* black */
@@ -884,6 +923,8 @@ a img {
 {
   background-color: $_(clickable);
   background-image:url(/ise/img/gradientButton25px.png);
+  /*background-image: linear-gradient(to bottom, white 40%, gray);*/
+  background-image: var(--btnGradient);
 
   color: $_(textColorB); /* white */
   border: solid 1px $_(black); /* black */
@@ -894,6 +935,8 @@ a img {
 .StdButton {
     background-color: $_(clickable);
     background-image:url(/ise/img/gradientButton25px.png);
+    /*background-image: linear-gradient(to bottom, white 40%, gray);*/
+    background-image: var(--btnGradient);
     margin:2%;
     border:1px solid $_(black); /* black */
     /* width:95%; */
@@ -911,7 +954,9 @@ a img {
 
 .StdButtonBig {
     background-color: $_(clickable);
-    background-image:url(/ise/img/gradientButton50px.png);
+    /*background-image:url(/ise/img/gradientButton50px.png);*/
+    background-image: linear-gradient(to bottom, white 40%, gray);
+    background-image: var(--btnGradient);
     margin:2%;
     border:1px solid $_(black); /* black */
     /* width:95%; */
@@ -933,7 +978,9 @@ a img {
 {
   background-color: $_(activeBackground); /* #dddddd */
   background-image:url(/ise/img/gradientButton25px.png);
-  color: $_(textColorA); /* #ffffff */
+  /*background-image: linear-gradient(to bottom, white 40%, gray);*/
+  background-image: var(--btnGradient);
+  color: $_(gray);
   border: solid 1px $_(gray); /* silver */
   border-radius: 5px;
   margin:2%;
@@ -991,7 +1038,9 @@ a img {
 .FooterButton {
 
   background-color: $_(clickable);
-  background-image:url(/ise/img/gradientButton50px.png);
+  /*background-image:url(/ise/img/gradientButton50px.png);*/
+  background-image: linear-gradient(to bottom, white 40%, gray);
+  background-image: var(--btnGradient);
 
   overflow: auto;
 
@@ -1209,13 +1258,10 @@ a img {
 .tTable
 {
   text-align:center;
-  margin-left:10px;
-  margin-top:10px;
-  margin-right:10px;
+  margin:10px;
   empty-cells: show;
-  width:97%;
-  /*width:1200px;*/
   border:solid 1px $_(black); /* black */
+  width: 100%;
 }
 /*
 .tTable th
@@ -1225,9 +1271,10 @@ a img {
 
 .tTable td
 {
-  color: $_(textColorB); /* black */
+  color: $_(textColorB);
 }
 */
+
 .bgWhite
 {
   background-color: $_(white); /* white */
@@ -1271,8 +1318,8 @@ div.caption  { display: table-caption; }
 .tMain
 {
   border:solid 1px $_(black); /* black */
-  margin-left:20px;
-  margin-top:20px;
+  margin:10px;
+  width:100%;
 }
 
 .tHeader
@@ -1354,12 +1401,8 @@ div.caption  { display: table-caption; }
 
 .oLine
 {
-  background-color: $_(background); /* #183473 */
-  width: 90%;
+  width: 100%;
   height: 6px;
-  border-bottom-width: 5px;
-  border-bottom-style: solid;
-  border-bottom-color: $_(white); /* #ffffff */
 }
 
 .sysConfigHeight
@@ -1450,15 +1493,28 @@ div.caption  { display: table-caption; }
 
 #_body {
   background-image:url(/ise/img/gradientButton25px.png);
+  /*background-image: linear-gradient(to bottom, white 40%, gray);*/
+  background-image: var(--btnGradient);
 
 }
 
 /* Buttons incl. Hilfe-Img. */
 .cpButton {
     width:230px;
-}#ic_deviceparameters #id_body
+}
+
+#id_body
 {
-	margin-top: 10px;
+  display: inherit;
+}
+
+#ic_deviceparameters
+{
+  display: contents;
+}
+
+#ic_deviceparameters #id_body
+{
 	background-color: $_(background); /* #183473 */
 }
 
@@ -1474,7 +1530,7 @@ div.caption  { display: table-caption; }
 
 #ic_deviceparameters #DeviceInformation
 {
-	width: 99%;
+	width: 100%;
 	color: $_(textColorA); /* white */
 	border: 1px solid $_(black); /* black */
 }
@@ -1529,7 +1585,7 @@ div.caption  { display: table-caption; }
 
 #ic_deviceparameters .parameter_area .parameters_table 
 {
-	width: 99%;
+	width: 100%;
 	color: $_(textColorA); /* white */
 	border: 1px solid $_(black); /* black */
 }
@@ -1633,6 +1689,10 @@ div.caption  { display: table-caption; }
 	border: 0;
 }/*LinkList-Tabelle*/
 /*--------------------------------------------*/
+#ic_linkpeerlist {
+  display: contents;
+}
+
 #ic_linkpeerlist #head_wrapper {
   border-bottom: 0;
   margin: 0;
@@ -1648,17 +1708,16 @@ div.caption  { display: table-caption; }
 #ic_linkpeerlist #body_wrapper {
   margin: 0;
   padding: 0;
-  width: 100%;
-  background-color: $_(background); /* #183473 */
+  display: inherit;
 }
 
 #ic_linkpeerlist .LinkListTbl {
   empty-cells: show;
   padding:0;
-  margin: 20px 0 0 0;
-  width: 100%;
+  margin: 10px;
   height: auto;
   border: 1px solid $_(black); /* black */
+  width: 100%;
 }
 
 #ic_linkpeerlist .LinkListTbl td {
@@ -1759,7 +1818,17 @@ background-color: $_(inactiveBackground);
 {
   height: 40px;
   background-color: $_(activeBackground);
-}#ic_selchannel #previous_step_wrapper {
+}
+
+#ic_selchannel {
+  display: contents;
+}
+
+#ic_selchannel #body_wrapper {
+  display: inherit;
+}
+
+#ic_selchannel #previous_step_wrapper {
 	background-color: $_(background); /* #183473 */
 	margin: 20px;
 }
@@ -1925,14 +1994,7 @@ background-color: $_(inactiveBackground);
 {
 	visibility: hidden;
 }
-/*--------------------------------------------*/
 
-/*Tabellenkörper Virtuelle Tasten*/
-#ic_selchannel #body_wrapper
-{
-	background-color: $_(background); /* #183473 */
-	margin-top: 10px;
-}
 /*--------------------------------------------*/
 
 /*Tabellenkörper Virtuelle Tasten*/
@@ -2144,6 +2206,11 @@ html, body {
   vertical-align: middle;
 }
 
+table.center {
+  margin-left:auto;
+  margin-right:auto;
+}
+
 .borderWidth2Px {
   border-width: 2px !important;
 }
@@ -2155,6 +2222,14 @@ html, body {
 .firmwareAvailable {
     cursor: pointer;
     color: $_(clickable);
+}
+
+.virtualChannelBckGnd {
+  background-color: #BCC3C1 !important;
+}
+
+.virtualChannelBckGndA {
+  background-color: #E0E0E0 !important;
 }
 
 .noBorder {
@@ -2186,7 +2261,7 @@ html, body {
 
 .RFConfig_InterfacesTable_tr_hover {
   background-color: $_(inactiveBackground);
-	cursor:pointer;
+  cursor:pointer;
 }
 
 .RFConfig_InterfacesTable td {
@@ -2194,6 +2269,63 @@ html, body {
   text-align: center;
   vertical-align: middle;
 }
+
+.centerSelect {
+   text-align-last: center;
+   text-align: center;
+   -ms-text-align-last: center;
+   -moz-text-align-last: center;
+}
+
+.controlHeader {
+  text-align:center;
+  background-color:#89989b;
+  color:white;
+  font-weight: bold;
+}
+
+.controlRedBorder {
+  border: 1px solid red !important;
+}
+
+progress[value] {
+
+  /* Reset the default appearance */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+   appearance: none;
+
+  /* Remove the default border in Firefox. */
+  border: none;
+
+  /* For IE10 */
+  color: #3678c9;
+  width: 75%;
+  height: 100%;
+}
+progress::-moz-progress-bar { background: #3678c9; }
+progress::-webkit-progress-value { background: #3678c9; }
+
+.dutyCycleProgress {
+  width: 75%;
+
+  background: -moz-linear-gradient(0deg, rgba(13,255,0,1) 0%, rgba(255,255,0,1) 63%, rgba(255,0,0,1) 100%); /* ff3.6+ */
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%, rgba(13,255,0,1)), color-stop(63%, rgba(255,255,0,1)), color-stop(100%, rgba(255,0,0,1))); /* safari4+,chrome */
+  background: -webkit-linear-gradient(0deg, rgba(13,255,0,1) 0%, rgba(255,255,0,1) 63%, rgba(255,0,0,1) 100%); /* safari5.1+,chrome10+ */
+  background: -o-linear-gradient(0deg, rgba(13,255,0,1) 0%, rgba(255,255,0,1) 63%, rgba(255,0,0,1) 100%); /* opera 11.10+ */
+  background: -ms-linear-gradient(0deg, rgba(13,255,0,1) 0%, rgba(255,255,0,1) 63%, rgba(255,0,0,1) 100%); /* ie10+ */
+  background: linear-gradient(90deg, rgba(13,255,0,1) 0%, rgba(255,255,0,1) 63%, rgba(255,0,0,1) 100%); /* w3c */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0DFF00', endColorstr='#ff0000',GradientType=1 ); /* ie6-9 */
+
+
+}
+
+.dutyCycleProgressBar {
+  width: 1%;
+  height: 12px;
+  background-color: #d9d9d9;
+}
+
 
 .Filter {
   margin:0;
@@ -2204,6 +2336,7 @@ html, body {
   /* font-weight:bold; */
   text-align:left;
   vertical-align:middle;  
+  height:20px !important;
 }
 
 .FilterHeight20 {
@@ -2225,6 +2358,8 @@ html, body {
 
   background-color:$_(clickable);
   background-image:url(/ise/img/gradientButton25px.png);
+  /*background-image: linear-gradient(to bottom, white 40%, gray );*/
+  background-image: var(--btnGradient);
 
   color: $_(textColorB); /* black */
 
@@ -2268,6 +2403,8 @@ html, body {
 
   background-color:$_(clickable);
   background-image:url(/ise/img/gradientButton25px.png);
+  /*background-image: linear-gradient(to bottom, white 40%, gray );*/
+  background-image: var(--btnGradient);
 
   width:96%;
   margin:3px 2% 3px 2%;
@@ -2417,6 +2554,8 @@ html, body {
   -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr= #ffffff, endColorstr=#d0d0d0)";*/
 
   background-image:url(/ise/img/gradientButton25px.png);
+  /*background-image: linear-gradient(to bottom, white 40%, gray );*/
+  background-image: var(--btnGradient);
 
   overflow: auto;
 
@@ -2439,6 +2578,8 @@ html, body {
 .MainMenuItemCaption {
   background-color: $_(mainMenuBackground);
   background-image:url(/ise/img/gradientButton25px.png);
+  /*background-image: linear-gradient(to bottom, white 40%, gray );*/
+  background-image: var(--btnGradient);
 
   border: 1px solid $_(black);
   /* padding-left: 5px;
@@ -2463,6 +2604,7 @@ html, body {
   background-color: $_(subMenuBackground);
   overflow:hidden;
   z-index:189;
+  margin-left: 5px;
 }
 
 .MainMenuSubItem {
@@ -2524,7 +2666,7 @@ html, body {
   left: 200px;
   height: 50px;
   line-height:50px;
-  text-align: middle;
+  text-align: center;
   color: $_(textColorB); /* #000000 */
 }
 
@@ -2823,13 +2965,12 @@ html, body {
   height:80px;
 }
 #DeviceListTable {
-  width:97%;
   height:auto;
-  margin:1%;
-  border:0 none;
-/*  border:1px black solid; */
+  margin:10px;
+  border:1px black solid;
   padding:0;
   empty-cells:show;
+  width:100%;
 }
 
 .DeviceListHead {
@@ -2871,8 +3012,7 @@ html, body {
 }
 
 .DeviceListRow_Highlight {
-  /* background-color: $_(inactiveBackground); */
-  background-color: $_(deviceListRowHighlight);
+  background-color: $_(inactiveBackground);
   cursor:pointer;
 }
 
@@ -2907,13 +3047,12 @@ html, body {
 }
 
 .DeviceListButton {
-
   background-color: $_(clickable);
   background-image:url(/ise/img/gradientButton25px.png);
-
+  /*background-image: linear-gradient(to bottom, white 40%, gray );*/
+  background-image: var(--btnGradient);
   margin:2%;
   border:1px solid $_(black); /* black */
-  border-radius: 3px;
   width:95%;
   text-align:center;
   height:20px;
@@ -3168,7 +3307,7 @@ html, body {
   height:20px;
   text-align:center;
   line-height:20px;
-}.YesNoDialogLayer {
+}.YesNoDialogLayer, .YesNoDialogLayerA {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -3176,7 +3315,7 @@ html, body {
   background-image: url(/ise/img/tr50.gif);
 }
 
-.YesNoDialog {
+.YesNoDialog, .YesNoDialogA {
   position: relative;
   top: 50%;
   left: 50%;
@@ -3187,7 +3326,8 @@ html, body {
   background-color: $_(black); /* black */
 }
 
-.YesNoDialogTitle {
+
+.YesNoDialogTitle, .YesNoDialogTitleA {
   position: absolute;
   top: 2px;
   left: 2px;
@@ -3202,7 +3342,7 @@ html, body {
   cursor: pointer;
 }
 
-.YesNoDialogContentWrapper {
+.YesNoDialogContentWrapper, .YesNoDialogContentWrapperA {
   position: absolute;
   top: 24px;
   left: 2px;
@@ -3213,14 +3353,14 @@ html, body {
   overflow: hidden;  
 }
 
-.YesNoDialogContent {
+.YesNoDialogContent, .YesNoDialogContentA {
   padding:5px;
   font-weight: bold;
   color: $_(textColorB); /* black */
 }
 
 
-.YesNoDialogFooter {
+.YesNoDialogFooter, .YesNoDialogFooterA {
   position: absolute;
   top: 98px;
   left: 2px;
@@ -3229,7 +3369,7 @@ html, body {
   background-color: $_(white); /* white */
 }
 
-.YesNoDialog_yesButton {
+.YesNoDialog_yesButton, .YesNoDialogA_yesButton {
   position: absolute;
   border: 1px solid $_(black); /* black */
   top: 4px;
@@ -3245,7 +3385,7 @@ html, body {
   width: 100px;  
 }
 
-.YesNoDialog_noButton {
+.YesNoDialog_noButton, .YesNoDialogA_noButton {
   position: absolute;
   border: 1px solid $_(black); /* black */
   top: 4px;
@@ -3539,6 +3679,7 @@ application {
 .UIButton {
   position: absolute;
   border: 1px solid $_(black); /* black */
+  border-radius: 5px;
   background-color:$_(clickable);
   margin: 0;
   padding: 0;
@@ -5011,8 +5152,8 @@ application {
 
 .CLASS02508 {
 	background-color:$_(activeBackground);
-	width:520px;
-	max-width:502px;
+	width:100%;
+	/*max-width:502px;*/
 	/*height:120px;*/
 	height:auto;
 	border:solid 1px $_(black); /* black */
@@ -5029,6 +5170,7 @@ application {
 	color: $_(textColorB); /* black */
 	width:100%;
 	border:none;
+	background-color:inherit;
 }
 
 .CLASS02511 {
@@ -5041,7 +5183,7 @@ application {
 }
 
 .CLASS02513 {
-	width:96;
+	width:96px;
 	background-color:$_(white); /* white */
 	border:1px solid $_(black); /* black */
 }
@@ -5199,6 +5341,17 @@ application {
   color: $_(white) ! important;
 }
 
+.CLASS02532c {
+	font-size: 10px;
+	width:220px;
+	/*height:25px;*/
+	height:auto;
+	min-height: 32px;
+	clear: both;
+	display: inline-block;
+  line-height:25px;
+}
+
 .CLASS02533 {
 	white-space:nowrap;
 }
@@ -5209,12 +5362,27 @@ application {
 }
 
 .CLASS02535 {
+	text-align: right;
+	width: 100%;
+	word-wrap: break-word;
+	display: inline-block;
+	padding: 2px;
+}
+
+.CLASS02535A {
 	float: right;
 	text-align: right;
-	width: 98%;
 	word-wrap: break-word;
 	max-width: 480px;
 	display: inline-block;
+}
+
+.CLASS02535B {
+	text-align: center;
+	word-wrap: break-word;
+	max-width: 480px;
+	display: inline-block;
+  padding-right: 5px;
 }
 
 .CLASS02536 {
@@ -5223,20 +5391,13 @@ application {
 
 .CLASS02537 {
 	text-align: center;
-	padding: 5px;
 	width: 100%;
-	background-color: $_(activeBackground) ! important;
 }
 
 .CLASS02538 {
-	/*width:220px;
-	height:25px;*/
-	width:98%;
 	height:100%;
 	min-height:1em;
-	max-width: 480px;
 	clear: both;
-	display: inline-block;
 }
 
 .CLASS02539 {
@@ -5314,6 +5475,20 @@ application {
 	line-height:35px;
 	height:35px;
 	width:150px;
+}
+
+.CLASS02550b {
+	cursor:pointer;
+	line-height:35px;
+	height:35px;
+	width:50px;
+}
+
+.CLASS02550c {
+	cursor:pointer;
+	line-height:35px;
+	height:35px;
+	width:100%;
 }
 
 .CLASS02551 {
@@ -5395,7 +5570,7 @@ application {
 }
 
 .CLASS02602 {
-	height:44px;
+	height: auto;
 }
 
 .CLASS02603 {
@@ -5424,21 +5599,6 @@ color: $_(textColorA) ! important; /* white */
 	border: solid 1px $_(black); /* black */
 	color: $_(textColorB); /* black */
 	padding: 4px;
-}
-
-.CLASS02607 {
-	width:55px;
-	background-color: $_(activeBackground);
-	border: solid 1px $_(black); /* black */
-	color: $_(textColorB); /* black */
-	padding: 4px;
-}
-
-.CLASS02608 {
-	position:relative;
-	text-align:left;
-	width:50px;
-	height:50px;
 }
 
 .CLASS02609 {
@@ -5481,7 +5641,7 @@ color: $_(textColorA); /* white */
 
 .CLASS02614 {
 	background-color: $_(inactiveButton); /* #dddddd */
-color: $_(textColorA); /* white */
+	color: lightgray;
 	font-weight: bold;
 	border: solid 1px $_(gray); /* silver */
 }
@@ -5577,10 +5737,12 @@ color: $_(textColorA); /* white */
 	vertical-align:middle;
 	border:solid 1px $_(black); /* #000000 */
 	font-weight:bold;
+  height: auto;
 }
 
 .CLASS02803 {
 	font-weight:bold;
+  height: auto;
 }
 
 .CLASS02804 {
@@ -5831,9 +5993,6 @@ color: $_(textColorA) ! important; /* white */
 }
 
 .CLASS03301 {
-	width:75%;
-	margin-left:20px;
-	margin-top:20px;
 	empty-cells:show;
 }
 
@@ -5921,8 +6080,7 @@ color: $_(textColorA); /* white */
 
 .CLASS03500 {
 	border:solid 1px $_(black); /* black */
-	margin-left:10px;
-	margin-top:27px;
+	width:100%;
 }
 
 .CLASS03501 {
@@ -5955,8 +6113,7 @@ color: $_(textColorA); /* white */
 
 .CLASS03600 {
 	border:solid 1px $_(black); /* black */
-	margin-left:50px;
-	margin-top:27px;
+	width:100%;
 }
 
 .CLASS03601 {
@@ -6045,8 +6202,7 @@ color: $_(textColorA); /* white */
 
 .CLASS03800 {
 	border:solid 1px $_(black); /* black */
-	margin-left:50px;
-	margin-top:27px;
+	width:100%;
 }
 
 .CLASS03801 {
@@ -6089,17 +6245,13 @@ color: $_(textColorA); /* white */
 }
 
 .CLASS03902 {
-	width:100%;
 	overflow:auto;
-	margin:0;
-	padding:0;
+	margin:10px;
+	margin-right:2px;
 }
 
 .CLASS03903 {
 	border:solid 1px $_(black); /* black */
-	margin-top:0px;
-	width:235px;
-	margin-top:27px;
 }
 
 .CLASS03904 {
@@ -6124,13 +6276,13 @@ color: $_(textColorA); /* white */
 }
 
 .CLASS03908 {
-	width:100%;
 	overflow:auto;
+	margin:10px;
+	margin-left:2px;
 }
 
 .CLASS03909 {
-	width: 80%;
-	height: 96%;
+	width: 100%;
 }
 
 .CLASS03910 {
@@ -6156,13 +6308,13 @@ color: $_(textColorA); /* white */
 }
 
 .CLASS04002 {
-	width:100%;
 	overflow:auto;
+	margin:10px;
+	margin-left:2px;
 }
 
 .CLASS04003 {
-	width: 80%;
-	height: 96%;
+	width: 100%;
 }
 
 .CLASS04004 {
@@ -6177,7 +6329,6 @@ color: $_(textColorA); /* white */
 
 .CLASS04006 {
 	border:solid 1px $_(black); /* black */
-	margin-top:27px;
 }
 
 .CLASS04007 {
@@ -6188,7 +6339,6 @@ color: $_(textColorA); /* white */
 
 .CLASS04100 {
 	text-align:center;
-	width:95%;
 	empty-cells:show;
 }
 
@@ -6205,6 +6355,7 @@ color: $_(textColorA); /* white */
 
 .CLASS04103 {
 	height:auto;
+	background-color: $_(background); /* #183473 */
 }
 
 .CLASS04104 {
@@ -6255,8 +6406,13 @@ color: $_(textColorA); /* white */
 
 .CLASS04200 {
 	text-align:center;
-	width:95%;
 	empty-cells:show;
+}
+
+.CLASS04201 {
+	overflow:auto;
+	margin:10px;
+	margin-right:2px;
 }
 
 .CLASS04202 {
@@ -6274,6 +6430,7 @@ color: $_(textColorA); /* white */
 
 .CLASS04205 {
 	height:auto;
+	background-color: $_(background); /* #183473 */
 }
 
 .CLASS04206 {
@@ -6330,7 +6487,8 @@ color: $_(textColorA); /* white */
 .CLASS04301 {
 	width:100%;
 	height:100%;
-	overflow-y:scroll;
+	overflow-y:auto;
+	display:contents;
 }
 
 .CLASS04302 {
@@ -6531,7 +6689,7 @@ color: $_(textColorA); /* white */
 .CLASS04905 {
 	line-height:15px;
 	font-size:smaller;
-	width:220px;
+	width:180px;
 }
 
 .CLASS04906 {
@@ -6589,7 +6747,9 @@ color: $_(textColorA); /* white */
 
 .CLASS05008 {
     background-color:$_(clickable);
-    background-image:url(/ise/img/gradientButton50px.png);
+    /*background-image:url(/ise/img/gradientButton50px.png);*/
+		/*background-image: linear-gradient(to bottom, white 40%, gray );*/
+		background-image: var(--btnGradient);
 
 	color: $_(textColorB); /* black */
 	border:solid 1px $_(black); /* black */
@@ -6616,6 +6776,7 @@ color: $_(textColorA); /* white */
 .CLASS05012 {
 	color: $_(textColorB); /* black */
 	font-size:9pt;
+	width:100%;
 }
 
 /* rega\pages\tabs\admin\msg\timemodule.htm */
@@ -6993,7 +7154,8 @@ color: $_(textColorA); /* white */
 	background-color:$_(inactiveBackground);
 	border:solid 1px $_(black); /* black */
 	width:170px;
-	padding: 6px	color: $_(textColorB); /* black */
+	padding: 6px;
+	color: $_(textColorB); /* black */
 }
 
 .CLASS05907 {
@@ -7061,11 +7223,12 @@ color: $_(textColorA); /* white */
 /* rega\pages\tabs\user\newFav.htm */
 
 .CLASS06300 {
-	margin:20px;
+	margin:10px;
+  width:100%;
 }
 
 .CLASS06301 {
-	color: $_(textColorA); /* white */
+	color: $_(textColorB); /* black */
 }
 
 .CLASS06302 {
@@ -7516,7 +7679,7 @@ color: $_(textColorA); /* white */
 
 .CLASS10902 {
   border:1px solid $_(gray); /* #999999 */
-  color: $_(activeBackground); /* rgb(224,224,224); */
+  color:$_(gray);
   background-color:$_(inactiveButton); /* rgb(192,192,192) */
   cursor:default;
 }
@@ -7704,6 +7867,17 @@ color: $_(textColorA); /* white */
   color: $_(textColorA); /* white */
 }
 
+.CLASS20009a {
+	padding: 5px;
+	text-align:center;
+	vertical-align:middle;
+	margin:2px;
+	cursor: default;
+	border: 1px solid $_(black); /* black */
+	background-color: $_(gray); /* rgb(153, 153, 153) */
+  color: $_(inactiveButton);
+}
+
 .CLASS20010 {
 	width:150px;
 }
@@ -7764,7 +7938,7 @@ color: $_(textColorA); /* white */
 /* config\ic_ifacecmd.cgi */
 
 .CLASS20700 {
-  padding:10;
+  padding: 10px;
   text-align:center
 }
 
@@ -8000,7 +8174,9 @@ color: $_(textColorA); /* white */
 .CLASS21000 {
 
   background-color: $_(gray); /* rgb(153, 153, 153) */
-  background-image:url(/ise/img/gradientButton50px.png);
+  /*background-image:url(/ise/img/gradientButton50px.png);*/
+	/*background-image: linear-gradient(to bottom, white 40%, gray );*/
+	background-image: var(--btnGradient);
 
   padding: 3px;
   text-align:center;
@@ -8060,6 +8236,12 @@ color: $_(textColorA); /* white */
 .CLASS21108 {
   width:100px;
   margin: 5px;
+}
+
+.CLASS21108A {
+	width: 100px;
+	margin: 5px;
+	line-height: 100%
 }
 
 .CLASS21109 {
@@ -8234,6 +8416,11 @@ color: $_(textColorA); /* white */
   vertical-align:top;
 }
 
+.CLASS21301a {
+  background-color:$_(inactiveBackground);
+  vertical-align:middle;
+}
+
 .CLASS21302 {
  	color: $_(textColorB); /* black */
   font-size: 20px;
@@ -8255,6 +8442,12 @@ color: $_(textColorA); /* white */
   background-color:$_(inactiveBackground);
   text-align:center;
   vertical-align:top;
+}
+
+.CLASS21305a {
+  background-color:$_(inactiveBackground);
+  text-align:center;
+  vertical-align:middle;
 }
 
 .CLASS21306 {
@@ -8513,7 +8706,8 @@ color: $_(textColorA); /* white */
 /* config\ic_selchannel.cgi */
 
 .CLASS21900 {
-  padding: 4px;
+  padding: 0px;
+  display: inherit;
 }
 
 .CLASS21901 {
@@ -8533,6 +8727,8 @@ color: $_(textColorA); /* white */
 
   background-color: $_(clickable);
   background-image:url(/ise/img/gradientButton25px.png);
+	/*background-image: linear-gradient(to bottom, white 40%, gray );*/
+	background-image: var(--btnGradient);
 
   color: $_(textColorB); /* black */
   border: 1px solid $_(black); /* black */
@@ -8561,7 +8757,6 @@ color: $_(textColorA); /* white */
 
 .CLASS21908 {
   overflow: auto;
-  background-color: $_(background); /* #183473 */
   width:100%;
 }
 
@@ -8604,6 +8799,8 @@ color: $_(textColorA); /* white */
 
   background-color: $_(clickable);
   background-image:url(/ise/img/gradientButton25px.png);
+	/*background-image: linear-gradient(to bottom, white 40%, gray );*/
+	background-image: var(--btnGradient);
 
   text-align:center;
   width:30px;
@@ -8616,8 +8813,8 @@ color: $_(textColorA); /* white */
 /* config\ic_deviceparameters.cgi */
 
 .CLASS22000 {
-  margin: 4px;
-  width: 99%;
+  margin: 10px;
+  width: 100%;
 }
 
 .CLASS22001 {
@@ -8694,7 +8891,8 @@ color: $_(textColorA); /* white */
 }
 
 .CLASS22101 {
-  padding:4px;
+  padding:0px;
+  display:inherit;
 }
 
 .CLASS22102 {

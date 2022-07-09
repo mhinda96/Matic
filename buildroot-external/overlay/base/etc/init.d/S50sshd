@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck shell=dash disable=SC2169,SC3010
 #
 # sshd        Starts sshd.
 #
@@ -6,57 +7,99 @@
 # Make sure the ssh-keygen progam exists
 [ -f /usr/bin/ssh-keygen ] || exit 0
 
+DAEMON=/usr/sbin/sshd
+PIDFILE=/var/run/sshd.pid
+
+test -x $DAEMON || exit 0
+
 umask 077
 
 start() {
-	# Only run this if ssh is explicitly enabled
-	[ -f /etc/config/sshEnabled ] || exit 0
+  # Only run this if ssh is explicitly enabled
+  [ -f /etc/config/sshEnabled ] || exit 0
 
-	# Create any missing keys
-	if [[ ! -f /usr/local/etc/ssh_host_dsa_key ]] ||
-	   [[ ! -f /usr/local/etc/ssh_host_ecdsa_key ]] ||
-	   [[ ! -f /usr/local/etc/ssh_host_ed25519_key ]] ||
-	   [[ ! -f /usr/local/etc/ssh_host_rsa_key ]]; then
-		mkdir -p /tmp/etc/ssh
-		cp -a /usr/local/etc/ssh_host_*_key* /tmp/etc/ssh/
-		/usr/bin/ssh-keygen -A -f /tmp
-		cp -a /tmp/etc/ssh/* /usr/local/etc/
-		rm -rf /tmp/etc/ssh
-	fi
+  # check if we should wipe compromised default data
+  if [[ "$(/usr/bin/sha256sum /usr/local/etc/config/shadow | cut -d' ' -f1)" == \
+        "cec9319d99ca94364ee21405357784f85326792ba4db2fc8601e32dce1367bbf" ]]; then
+    rm -f /usr/local/etc/config/sshEnabled /usr/local/etc/ssh_host_*
+    sed -i "s/^\(root\):.*:\(.*:.*:.*:.*:::\)$/\1:*:\2/" /usr/local/etc/config/shadow
+    exit 0
+  fi
 
-	# fix permissions
-	chmod 600 /usr/local/etc/ssh_host_*_key
+  echo -n "Starting sshd: "
 
-	printf "Starting sshd: "
-	/usr/sbin/sshd
-	touch /var/lock/sshd
-	echo "OK"
+  # Create any missing keys
+  if [[ ! -f /usr/local/etc/ssh_host_dsa_key ]] ||
+     [[ ! -f /usr/local/etc/ssh_host_ecdsa_key ]] ||
+     [[ ! -f /usr/local/etc/ssh_host_ed25519_key ]] ||
+     [[ ! -f /usr/local/etc/ssh_host_rsa_key ]]; then
+    mkdir -p /tmp/etc/ssh
+    cp -a /usr/local/etc/ssh_host_*_key* /tmp/etc/ssh/ 2>/dev/null
+    /usr/bin/ssh-keygen -A -f /tmp
+    cp -a /tmp/etc/ssh/* /usr/local/etc/
+    rm -rf /tmp/etc/ssh
+  fi
+
+  # SSH userdir setup (/root/.ssh is linked to /usr/local/etc/ssh)
+  mkdir -p /usr/local/etc/ssh
+  chmod 0700 /usr/local/etc/ssh
+  chown root:root /usr/local/etc/ssh
+
+  # fix keyfile permissions
+  chmod 0600 /usr/local/etc/ssh_host_*_key
+  chown root:root /usr/local/etc/ssh_host_*_key
+  if [[ -f /usr/local/etc/ssh/authorized_keys ]]; then
+    chmod 0600 /usr/local/etc/ssh/authorized_keys
+    chown root:root /usr/local/etc/ssh/authorized_keys
+  fi
+
+  if start-stop-daemon -S -q -p "${PIDFILE}" --exec "${DAEMON}"; then
+    echo "OK"
+  else
+    echo "FAIL"
+    exit 1
+  fi
 }
 stop() {
-	printf "Stopping sshd: "
-	killall sshd
-	rm -f /var/lock/sshd
-	echo "OK"
+  echo -n "Stopping sshd: "
+  if [[ -f ${PIDFILE} ]]; then
+    if start-stop-daemon -K -q -p "${PIDFILE}"; then
+      echo "OK"
+    else
+      echo "FAIL"
+      exit 1
+    fi
+  else
+    echo "OK"
+  fi
 }
 restart() {
-	stop
-	start
+  stop
+  start
+}
+reload() {
+  # send HUP to let the sshd daemon reload
+  if [[ -f /var/run/sshd.pid ]]; then
+    /bin/kill -HUP "$(cat /var/run/sshd.pid)"
+  fi
 }
 
 case "$1" in
   start)
-	start
-	;;
+    start
+  ;;
   stop)
-	stop
-	;;
-  restart|reload)
-	restart
-	;;
+    stop
+  ;;
+  restart)
+    restart
+  ;;
+  reload)
+    reload
+  ;;
   *)
-	echo "Usage: $0 {start|stop|restart}"
-	exit 1
+  echo "Usage: $0 {start|stop|restart|reload}"
+  exit 1
 esac
 
 exit $?
-

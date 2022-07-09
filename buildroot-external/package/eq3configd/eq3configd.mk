@@ -1,20 +1,20 @@
-#############################################################
+################################################################################
 #
-# Support for EQ3CONFIGD Daemon
+# Support for eq3configd Daemon
 #
-#############################################################
+################################################################################
 
-EQ3CONFIGD_VERSION = 1.1.0
-EQ3CONFIGD_SITE = $(BR2_EXTERNAL_EQ3_PATH)/package/eq3configd
-EQ3CONFIGD_SITE_METHOD = local
+EQ3CONFIGD_VERSION = 1.0.0
+EQ3CONFIGD_SOURCE =
+EQ3CONFIGD_LICENSE = Apache-2.0
 
 define EQ3CONFIGD_USERS
   eq3configd -1 eq3configd -1 * - - - eQ3 config daemon
 endef
 
 define EQ3CONFIGD_INSTALL_INIT_SYSV
-  $(INSTALL) -m 0755 -D $(@D)/S50eq3configd \
-    $(TARGET_DIR)/etc/init.d/S50eq3configd
+	$(INSTALL) -D -m 0755 $(EQ3CONFIGD_PKGDIR)/S50eq3configd \
+		$(TARGET_DIR)/etc/init.d/S50eq3configd
 endef
 
 $(eval $(generic-package))

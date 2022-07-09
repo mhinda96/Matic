@@ -1,9 +1,9 @@
 #!/bin/sh
+# shellcheck shell=dash disable=SC2169 source=/dev/null
 #
 # Starts HMServer.
 #
 
-LOGLEVEL_HMServer=5
 CFG_TEMPLATE_DIR=/etc/config_templates
 STARTWAITFILE=/var/status/HMServerStarted
 
@@ -12,23 +12,70 @@ STARTWAITFILE=/var/status/HMServerStarted
 # skip this startup if not in normal mode
 [[ "${HM_MODE}" != "NORMAL" ]] && exit 0
 
-HM_SERVER=/opt/HMServer/HMIPServer.jar
+HM_SERVER=/opt/HMServer/HMIPServer.jar:/opt/HMServer/coupling/ESHBridge.jar
+HM_SERVER_CLASS="de.eq3.ccu.server.ip.HMIPServer"
 HM_SERVER_ARGS="/var/etc/crRFD.conf /var/etc/HMServer.conf"
 HM_SERVER_DEVNODE=/dev/mmd_hmip
+LOGLEVEL_HMIP=error
 PIDFILE=/var/run/HMIPServer.pid
 
 init() {
   export JAVA_HOME=/opt/java/
   export PATH=${PATH}:${JAVA_HOME}/bin
 
-  if [[ ! -e /etc/config/log4j.xml ]]; then
-    cp -a ${CFG_TEMPLATE_DIR}/log4j.xml /etc/config
-  fi
-
   if [[ ! -e /etc/config/hmip_networkkey.conf ]]; then
     if [[ -f ${CFG_TEMPLATE_DIR}/hmip_networkkey.conf ]]; then
       cp -a ${CFG_TEMPLATE_DIR}/hmip_networkkey.conf /etc/config
     fi
+  fi
+
+  # create a log4j2.xml config file in /var/etc and modify it
+  # according to the syslog settings in /etc/config/syslog
+  cp -a ${CFG_TEMPLATE_DIR}/log4j2.xml /var/etc/
+
+  # get the current syslog settings
+  [[ -r /etc/config/syslog ]] && . /etc/config/syslog
+
+  # check if we have an external loghost and if so, modify
+  # the SYSLOG appender in log4j2.xml accordingly.
+  if [[ -n "${LOGHOST}" ]]; then
+    sed -i "s|host=\"127\.0\.0\.1\"|host=\"${LOGHOST}\"|" /var/etc/log4j2.xml
+    sed -i "/AppenderRef ref=\"File\"/a\\    <AppenderRef ref=\"SYSLOG\"\\/>" /var/etc/log4j2.xml
+  fi
+
+  # modify "priority value" values in log4j2.xml to set the
+  # global loglevel
+  sed -i "s/level=\".*\"/level=\"$(echo ${LOGLEVEL_HMIP} | tr '[:upper:]' '[:lower:]')\"/g" /var/etc/log4j2.xml
+
+  # if the userfs is located on a non-mmc device (not on a SD card)
+  # we can safely use the old /usr/local/sdcard directory path as
+  # the general storagePath for diagrams and daily backups
+  storagePath=""
+  if [[ "${HM_HOST}" == "oci" ]] || grep " /usr/local " /proc/mounts | grep -qv "^/dev/mmc"; then
+    storagePath="/usr/local/sdcard"
+    mkdir -p ${storagePath}
+  fi
+
+  # users can override the storagePath by specifying an own storage
+  # path in /etc/config/CustomStoragePath
+  if [[ -f /etc/config/CustomStoragePath ]]; then
+    storagePath=$(cat /etc/config/CustomStoragePath)
+  fi
+
+  # in case a storagePath is specified we make sure it is setup
+  # correct and in case it is empty or does not exist we skip this
+  # so that the WebUI will remind users to insert an USB drive for
+  # storing diagrams+backups
+  if [[ -n "${storagePath}" ]] && [[ -d "${storagePath}" ]]; then
+    if [[ ! -d "${storagePath}/measurement" ]]; then
+      mkdir -p "${storagePath}/measurement"
+    fi
+    if [[ ! -e "${storagePath}/.nobackup" ]]; then
+      touch "${storagePath}/.nobackup"
+    fi
+    ln -sfn "${storagePath}" /media/usb0
+    touch /var/status/SDinitialised
+    touch /var/status/hasSD
   fi
 
   # lets build HMServer.conf with own diagram path
@@ -43,11 +90,24 @@ init() {
     mkdir -p /tmp/measurement
   fi
 
+  # sanitize the /etc/config/firmware path to make sure no directory without
+  # an 'info' file or info file without any "Name=" entry is located within
+  # (cf. https://github.com/jens-maus/RaspberryMatic/issues/1302)
+  for dir in /etc/config/firmware/*; do
+    if [[ -d "${dir}" ]]; then
+      if [[ ! -f "${dir}/info" ]] || ! grep -q -e "Name=." "${dir}/info"; then
+        echo -n "WARNING: removed invalid ${dir}, "
+        rm -rf "${dir}"
+      fi
+    fi
+  done
+
   if [[ -n "${HM_HMIP_DEV}" ]]; then
 
-    # if no uart is used to connect to the rf module (e.g. HmIP-RFUSB)
+    # if no raw uart is used to connect to the rf module (e.g. HmIP-RFUSB)
     # we have to set the device node
-    if [[ "${HM_HMIP_DEVNODE}" != "${HM_HOST_GPIO_UART}" ]]; then
+    if [[ "${HM_HMIP_DEVNODE}" != "${HM_HMRF_DEVNODE}" ]] ||
+       ! echo -n "${HM_HMIP_DEVNODE}" | grep -q raw-uart; then
       HM_SERVER_DEVNODE=${HM_HMIP_DEVNODE}
     else
       HM_SERVER_DEVNODE=/dev/mmd_hmip
@@ -57,16 +117,26 @@ init() {
     # when generating /var/etc/crRFD.conf
     sed "s|^Adapter\.1\.Port=/dev/.*$|Adapter.1.Port=${HM_SERVER_DEVNODE}|" ${CFG_TEMPLATE_DIR}/crRFD.conf >/var/etc/crRFD.conf
 
+    # enable Advanced HmIP capabilities in crRFD.conf if the used HmIP RF module supports it
+    if [[ "${HM_HMIP_DEV}" == "RPI-RF-MOD" ]] || [[ "${HM_HMIP_DEV}" == "HMIP-RFUSB" ]]; then
+      ADVANCED_HMIP="true"
+    else
+      ADVANCED_HMIP="false"
+    fi
+
+    # set Adapter.Local.Device.Enabled. This will bring up the additional CO-PROCESSOR
+    # device which will allow to show up the DutyCycle and CarrierSense parameters.
+    sed -i "s|^Adapter\.Local\.Device\.Enabled=.*$|Adapter.Local.Device.Enabled=${ADVANCED_HMIP}|" /var/etc/crRFD.conf
+
+    # set Lan.Routing.Enabled which will enable the advanced HmIP Routing capabilities
+    # in crRFD.
+    sed -i "s|^Lan\.Routing\.Enabled=.*$|Lan.Routing.Enabled=${ADVANCED_HMIP}|" /var/etc/crRFD.conf
+
   else
-    HM_SERVER=/opt/HMServer/HMServer.jar
+    HM_SERVER=/opt/HMServer/HMServer.jar:/opt/HMServer/coupling/ESHBridge.jar
+    HM_SERVER_CLASS="de.eq3.ccu.server.HMServer"
     HM_SERVER_ARGS="/var/etc/HMServer.conf"
     HM_SERVER_DEVNODE=""
-  fi
-
-  # use checkHmIPdevices.sh to find obsolete devices files
-  # and move them to a backup folder
-  if [[ -x /bin/checkHmIPdevices.sh ]]; then
-    /bin/checkHmIPdevices.sh -f
   fi
 }
 
@@ -89,11 +159,37 @@ start() {
   echo -n "Starting HMIPServer: "
   init
 
+  # get the architecture
+  ARCH=$(uname -m)
+  JAVAOPT=
+
+  # calculate the maximum used heap size (-Xmx) depending on the
+  # total amount of RAM we have (use max. 25%) - use multiple of 128MB
+  MAXHEAP=$(free -m | grep Mem: | awk '{print int($2*0.25/128)*128}')
+  if [[ -n "${MAXHEAP}" ]] && [[ "${MAXHEAP}" -gt 128 ]]; then
+    JAVAOPT="-Xmx${MAXHEAP}m ${JAVAOPT}"
+  else
+    JAVAOPT="-Xmx128m ${JAVAOPT}"
+  fi
+
+  # add gnu.io.rxtx.SerialPorts to cmd line if HM_SERVER_DEVNODE not empty
+  if [[ -n "${HM_SERVER_DEVNODE}" ]]; then
+    JAVAOPT="-Dgnu.io.rxtx.SerialPorts=${HM_SERVER_DEVNODE} ${JAVAOPT}"
+
+    # check that HM_SERVER_DEVNODE exists and if not error out because then
+    # HMIPServer will also not work of course
+    if [[ ! -c "${HM_SERVER_DEVNODE}" ]]; then
+      echo "ERROR: ${HM_SERVER_DEVNODE} missing"
+      exit 1
+    fi
+  fi
+
   # adjust the oom score (which is inherited by start-stop-daemon)
   # to ensure that others are killed first in case of low memory situations
-  echo -900 >/proc/$$/oom_score_adj
+  echo -900 >/proc/$$/oom_score_adj 2>/dev/null
 
-  start-stop-daemon -b -S -q -m -p ${PIDFILE} --exec java -- -Xmx128m -Dos.arch=$(uname -m) -Dlog4j.configuration=file:///etc/config/log4j.xml -Dfile.encoding=ISO-8859-1 -Dgnu.io.rxtx.SerialPorts=${HM_SERVER_DEVNODE} -jar ${HM_SERVER} ${HM_SERVER_ARGS}
+  # shellcheck disable=SC2086
+  start-stop-daemon -b -S -q -m -p "${PIDFILE}" --exec java -- -Dos.arch=${ARCH} ${JAVAOPT} -Dlog4j.configurationFile=file:///var/etc/log4j2.xml -Dfile.encoding=ISO-8859-1 -cp "${HM_SERVER}" ${HM_SERVER_CLASS} ${HM_SERVER_ARGS}
   echo -n "."
   waitStartupComplete
 }
