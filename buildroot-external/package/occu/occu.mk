@@ -113,6 +113,10 @@ ifeq ($(BR2_x86_64),y)
   OCCU_LIBDIR=$(BR2_ROOTFS_LIB32_DIR)
 endif
 
+define OCCU_USERS
+	hss_led -1 hss_led -1 * - - - hss_led user
+endef
+
 define OCCU_INSTALL_TARGET_CMDS
 		$(MAKE) OCCU_RF_PROTOCOL=$(OCCU_RF_PROTOCOL) \
 			OCCU_ARCH=$(OCCU_ARCH) \
